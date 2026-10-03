@@ -10,9 +10,9 @@ def search_packages(query: str, repo: str = None) -> dict:
     url = "https://repology.org/api/v1/projects/"
     params = {"search": query}
     
-    # inrepo используем для фильтрации проектов, но не пакетов
+    
     if repo:
-        params["inrepo"] = repo
+        params["inrepo"] = repo #filter project non repo
     
     try:
         response = requests.get(url, params=params, headers={"User-Agent": USER_AGENT}, timeout=10)
@@ -24,7 +24,7 @@ def search_packages(query: str, repo: str = None) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Поиск пакетов по дистрибутивам Linux через Repology API"
+        description="Поиск пакетов по дистрибутивам linux"
     )
     parser.add_argument("query", help="Имя пакета для поиска")
     parser.add_argument("--repo", help="Фильтр по репозиторию (arch, debian_12, fedora_40 и т.д.)", default=None)
@@ -51,10 +51,9 @@ def main():
         for pkg in packages:
             repo_name = pkg.get("repo", "N/A")
             
-            # 🔥 ВОТ ЗДЕСЬ ФИЛЬТРАЦИЯ! 
-            # Если указан репозиторий, показываем только пакеты из него
-            if args.repo and repo_name != args.repo:
-                continue  # Пропускаем этот пакет
+            
+            if args.repo and repo_name != args.repo:  
+                continue  
             
             version = pkg.get("version", "N/A")
             status = pkg.get("status", "unknown").replace("outdated", "устаревший").replace("newest", "актуальный")
