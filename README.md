@@ -1,4 +1,4 @@
-# pksearch
+# pkgsearch
 
 
 Python script for search packages in any distro
